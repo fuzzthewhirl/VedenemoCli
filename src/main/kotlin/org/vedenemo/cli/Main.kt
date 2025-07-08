@@ -1,5 +1,6 @@
 package org.vedenemo.cli
 
+import kotlinx.coroutines.runBlocking
 import java.util.Scanner
 
 fun main() {
@@ -30,6 +31,13 @@ fun main() {
 
     println("\n📜 DSL Script:")
     println(scriptLines.joinToString("\n"))
-
+    runBlocking {
+        try {
+            val echoed = BackendClient.echo(scriptLines.joinToString("\n"))
+            println("🔁 Echoed from backend: $echoed")
+        } catch (e: Exception) {
+            println("❌ Failed to contact backend: ${e.message}")
+        }
+    }
     // Future: Parse + send to backend or save as file
 }
