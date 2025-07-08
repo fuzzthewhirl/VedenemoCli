@@ -6,6 +6,8 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
@@ -19,6 +21,8 @@ object BackendClient {
     suspend fun echo(message: String): String {
         println("message: $message")
         val response: HttpResponse = client.post("http://localhost:8080/model/echo") {
+            contentType(ContentType.Text.Plain)
+            accept(ContentType.Text.Plain)
             setBody(message)
         }
         val body = response.body<String>()
