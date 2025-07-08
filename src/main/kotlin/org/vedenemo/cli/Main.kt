@@ -5,13 +5,9 @@ import java.util.Scanner
 
 fun main() {
     println("🧠 Vedenemo CLI Interactive Mode")
-    println("Type commands like:")
-    println("  entity \"Person\" named \"Person\"")
-    println("  \"Person\" addAttribute \"email\" ofType TEXT since 1.0")
-    println("Type 'exit' to quit.")
+    println("Type 'q' to quit.")
     println()
 
-    val scriptLines = mutableListOf<String>()
     val scanner = Scanner(System.`in`)
 
     while (true) {
@@ -22,22 +18,17 @@ fun main() {
         }
 
         val line = scanner.nextLine()
-        if (line.lowercase() == "exit") break
+        if (line.lowercase() == "q") break
         if (line.isNotBlank()) {
-            scriptLines.add(line)
+            println("\nline to send: $line\n")
+            runBlocking {
+                try {
+                    val echoed = BackendClient.echo(line)
+                    println("🔁 Echoed from backend: $echoed")
+                } catch (e: Exception) {
+                    println("❌ Failed to contact backend: ${e.message}")
+                }
+            }
         }
     }
-
-
-    println("\n📜 DSL Script:")
-    println(scriptLines.joinToString("\n"))
-    runBlocking {
-        try {
-            val echoed = BackendClient.echo(scriptLines.joinToString("\n"))
-            println("🔁 Echoed from backend: $echoed")
-        } catch (e: Exception) {
-            println("❌ Failed to contact backend: ${e.message}")
-        }
-    }
-    // Future: Parse + send to backend or save as file
 }

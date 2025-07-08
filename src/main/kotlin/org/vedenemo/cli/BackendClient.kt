@@ -17,9 +17,14 @@ object BackendClient {
     }
 
     suspend fun echo(message: String): String {
-        val response: HttpResponse = client.post("http://localhost:8080/api/echo") {
+        println("message: $message")
+        val response: HttpResponse = client.post("http://localhost:8080/model/echo") {
             setBody(message)
         }
-        return response.body()
+        val body = response.body<String>()
+        println("\nresponse.body: $body\n")
+        val status = response.status
+        println("\nresponse.status: $status\n")
+        return body
     }
 }
